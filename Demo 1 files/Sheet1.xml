@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WorkSheet Name="Matrix Multiplication">
+	<Shape Type="Button" Left = "250" Top = "150" Width = "80" Height = "35" Text="Multiply!" Macro = "MatrixMultiplication.MatrixMultiplication" />
+	<Cell Type="string" Row = "1" Column = "5" Value = "Multiplication of matrices:" />
+	<Cell Type="string" Row = "1" Column = "6" Value = "M1" />
+	<Cell Type="int" Row = "1" Column = "7" Value = "1" />
+	<Cell Type="int" Row = "1" Column = "8" Value = "2" />
+	<Cell Type="int" Row = "2" Column = "7" Value = "3" />
+	<Cell Type="int" Row = "2" Column = "8" Value = "4" />
+	<Cell Type="string" Row = "3" Column = "6" Value = "M2" />
+	<Cell Type="int" Row = "3" Column = "7" Value = "3" />
+	<Cell Type="int" Row = "3" Column = "8" Value = "4" />
+	<Cell Type="int" Row = "4" Column = "7" Value = "5" />
+	<Cell Type="int" Row = "4" Column = "8" Value = "6" />
+	<Cell Type="string" Row = "5" Column = "6" Value = "Mres" />
+</WorkSheet>
