@@ -1,0 +1,14 @@
+@startuml
+cloud GitHub
+GitHub --> Installer : clone
+GitHub <-- ChangedTable #black;line.dotted : commit / pull request
+package Installer {
+  usecase [Table] as Table1
+  usecase [Classes, modules, user frames] as Classes1
+  usecase [XMLs describing all sheets] as XMLs1
+}
+package ChangedTable {
+  usecase [Classes, modules, user frames] as UC2
+  usecase [XMLs describing all sheets] as UC3
+}
+@enduml
