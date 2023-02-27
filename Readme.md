@@ -8,8 +8,10 @@ I propose to distribute a single Excel file called "Installer" that loads sheets
 
 <img src="./img/main.svg">
 
+## Examples
+* "Demo 1.xlsm" installs sources and one sheet with implementation of matrix multiplication.
+
 ## TODO:
-* Create a "Publish" functionality that updates the XML for submission.
 * Add handling of references
 * Add handling of cell formatting
 * Add handling of user forms

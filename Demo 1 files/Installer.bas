@@ -85,7 +85,7 @@ Function VBATrusted() As Boolean
     VBATrusted = (Application.VBE.VBProjects.Count) > 0
 End Function
 
-Sub Test()
+Sub ExportSources()
     Dim i&, exportedFiles$(), listOfFiles$
     
     exportedFiles = ExportModules(backupDirectory, "Installer", True)
