@@ -8,6 +8,42 @@ I propose to distribute a single Excel file called "Installer" that loads sheets
 
 <img src="./img/main.svg">
 
+## Structure
+For execution the installer needs XML files and modules stored in folder (see constant "backupDirectory"). The main XML file (constant "MainXmlFile", "main.xml") inside the directory contains the names of XML files corresponding to each created sheet.
+
+An example of "main.xml" that contains one sheet ("Sheet1.xml"):
+```xml
+<WorkBook>
+	<WorkSheets>
+		<WorkSheet Path="Sheet1.xml" />
+	</WorkSheets>
+</WorkBook>
+```
+
+Each sheet' XML file contains following XML nodes:
+* Cell
+    * Type (not used yet)
+    * Row
+    * Column
+    * Value
+* Shape
+    * Type (only "Button" can be used)
+    * Left
+    * Top
+    * Width
+    * Height
+    * Text
+    * Macro (macro name that will be executed on button press)
+
+An example of "Sheet1.xml" that contains one sheet ("Sheet1.xml"):
+```xml
+<WorkSheet Name="Matrix Multiplication">
+	<Shape Type="Button" Left = "250" Top = "150" Width = "80" Height = "35" Text="Multiply!" Macro = "MatrixMultiplication.MatrixMultiplication" />
+	<Cell Type="string" Row = "1" Column = "6" Value = "M1" />
+	<Cell Type="int" Row = "1" Column = "7" Value = "1" />
+</WorkSheet>
+```
+
 ## Examples
 * "Demo 1.xlsm" installs sources and one sheet with implementation of matrix multiplication.
 
