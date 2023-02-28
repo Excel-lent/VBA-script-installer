@@ -35,7 +35,7 @@ Each sheet' XML file contains following XML nodes:
     * Text
     * Macro (macro name that will be executed on button press)
 
-An example of "Sheet1.xml" that contains one sheet ("Sheet1.xml"):
+An example of "Sheet1.xml":
 ```xml
 <WorkSheet Name="Matrix Multiplication">
 	<Shape Type="Button" Left = "250" Top = "150" Width = "80" Height = "35" Text="Multiply!" Macro = "MatrixMultiplication.MatrixMultiplication" />
