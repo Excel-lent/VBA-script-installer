@@ -2,7 +2,7 @@ Attribute VB_Name = "Installer"
 Option Explicit
 
 Const MainXmlFile As String = "main.xml"
-Const backupDirectory = "\Demo 1 files\"
+Const backupDirectory As String = "\Demo 1 files\"
 
 Sub Install()
     Dim vbResult As VbMsgBoxResult, result As Boolean, listOfSheets$, queriesSheet As IXMLDOMElement
@@ -28,10 +28,19 @@ Sub Install()
     End If
     
     result = mainXml.Load(ThisWorkbook.Path & backupDirectory & MainXmlFile)
+    If Not result Then
+        Call MsgBox("Error at loading of " & ThisWorkbook.Path & backupDirectory & MainXmlFile, vbOKOnly, "Installer")
+        Exit Sub
+    End If
+    
     listOfSheets = ""
     For Each nd In mainXml.DocumentElement.SelectNodes("/WorkBook/WorkSheets/WorkSheet")
         Set newWorkSheet = New MSXML2.DOMDocument60
         result = newWorkSheet.Load(ThisWorkbook.Path & backupDirectory & nd.getAttribute("Path"))
+        If Not result Then
+            Call MsgBox("Error at loading of " & ThisWorkbook.Path & backupDirectory & nd.getAttribute("Path"), vbOKOnly, "Installer")
+            Exit Sub
+        End If
         Set queriesSheet = newWorkSheet.DocumentElement.SelectNodes("/WorkSheet").Item(0)
         listOfSheets = listOfSheets & queriesSheet.getAttribute("Name") & vbCrLf
     Next nd
@@ -41,6 +50,10 @@ Sub Install()
     For Each nd In mainXml.DocumentElement.SelectNodes("/WorkBook/WorkSheets/WorkSheet")
         Set newWorkSheet = New MSXML2.DOMDocument60
         result = newWorkSheet.Load(ThisWorkbook.Path & backupDirectory & nd.getAttribute("Path"))
+        If Not result Then
+            Call MsgBox("Error at loading of " & ThisWorkbook.Path & backupDirectory & nd.getAttribute("Path"), vbOKOnly, "Installer")
+            Exit Sub
+        End If
         Set queriesSheet = newWorkSheet.DocumentElement.SelectNodes("/WorkSheet").Item(0)
         With ThisWorkbook
             Set ws = .Sheets.Add(After:=.Sheets(.Sheets.Count))
@@ -80,7 +93,7 @@ Sub Install()
     End If
 End Sub
 
-Function VBATrusted() As Boolean
+Private Function VBATrusted() As Boolean
     On Error Resume Next
     VBATrusted = (Application.VBE.VBProjects.Count) > 0
 End Function
@@ -96,7 +109,7 @@ Sub ExportSources()
     Call MsgBox("Following files were exported:" & vbCrLf & listOfFiles)
 End Sub
 
-Function ExportModules(backupDirectory$, installerName$, backupInstaller As Boolean) As String()
+Private Function ExportModules(backupDirectory$, installerName$, backupInstaller As Boolean) As String()
     Dim VBComp, VBMod, exportedFiles$()
     
     ReDim exportedFiles(0)
