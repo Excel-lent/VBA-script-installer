@@ -55,23 +55,23 @@ Sub Install()
             Exit Sub
         End If
         Set queriesSheet = newWorkSheet.DocumentElement.SelectNodes("/WorkSheet").Item(0)
+        
         With ThisWorkbook
             Set ws = .Sheets.Add(After:=.Sheets(.Sheets.Count))
             ws.Name = queriesSheet.getAttribute("Name")
         End With
         
-        ' Create cells and elements
-        For Each nd2 In queriesSheet.SelectNodes("/WorkSheet/Cell")
-            ws.Cells(CInt(nd2.getAttribute("Row")), CInt(nd2.getAttribute("Column"))) = nd2.getAttribute("Value")
-        Next nd2
-        
-        ' Create buttons
-        For Each nd2 In queriesSheet.SelectNodes("/WorkSheet/Shape")
-            Set shp = ws.Buttons.Add(CDbl(nd2.getAttribute("Left")), CDbl(nd2.getAttribute("Top")), CDbl(nd2.getAttribute("Width")), CDbl(nd2.getAttribute("Height")))
-            With shp
-              .OnAction = nd2.getAttribute("Macro")
-              .Caption = nd2.getAttribute("Text")
-            End With
+        For Each nd2 In queriesSheet.ChildNodes
+            Select Case LCase(nd2.BaseName)
+                Case "cell"     ' Create cells and elements
+                    ws.Cells(CInt(nd2.getAttribute("Row")), CInt(nd2.getAttribute("Column"))) = nd2.getAttribute("Value")
+                Case "shape"    ' Create buttons
+                    Set shp = ws.Buttons.Add(CDbl(nd2.getAttribute("Left")), CDbl(nd2.getAttribute("Top")), CDbl(nd2.getAttribute("Width")), CDbl(nd2.getAttribute("Height")))
+                    With shp
+                      .OnAction = nd2.getAttribute("Macro")
+                      .Caption = nd2.getAttribute("Text")
+                    End With
+            End Select
         Next nd2
     Next nd
     
