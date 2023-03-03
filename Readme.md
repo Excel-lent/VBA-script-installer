@@ -34,6 +34,8 @@ Each sheet' XML file contains following XML nodes:
     * Height
     * Text
     * Macro (macro name that will be executed on button press)
+* Run
+    * Function - a function that should be called.
 
 An example of "Sheet1.xml":
 ```xml

@@ -33,6 +33,16 @@ Sub Install()
         Exit Sub
     End If
     
+    ' Add modules
+    If VBATrusted() Then
+        importedFiles = ImportModules
+        listOfFiles = ""
+        For i = 1 To UBound(importedFiles)
+            listOfFiles = listOfFiles & importedFiles(i) & vbCrLf
+        Next i
+        Call MsgBox("Following files were imported:" & vbCrLf & listOfFiles)
+    End If
+    
     listOfSheets = ""
     For Each nd In mainXml.DocumentElement.SelectNodes("/WorkBook/WorkSheets/WorkSheet")
         Set newWorkSheet = New MSXML2.DOMDocument60
@@ -71,19 +81,15 @@ Sub Install()
                       .OnAction = nd2.getAttribute("Macro")
                       .Caption = nd2.getAttribute("Text")
                     End With
+                Case "run"
+                    Run (nd2.getAttribute("Function"))
             End Select
         Next nd2
     Next nd
-    
-    ' Add modules
-    If VBATrusted() Then
-        importedFiles = ImportModules
-        listOfFiles = ""
-        For i = 1 To UBound(importedFiles)
-            listOfFiles = listOfFiles & importedFiles(i) & vbCrLf
-        Next i
-        Call MsgBox("Following files were imported:" & vbCrLf & listOfFiles)
-    End If
+End Sub
+
+Sub DeleteInstallerSheet()
+    Dim vbResult As VbMsgBoxResult
     
     vbResult = MsgBox("Do you want to remove ""Installer"" sheet?", vbYesNo, "Installer")
     If vbResult = vbYes Then

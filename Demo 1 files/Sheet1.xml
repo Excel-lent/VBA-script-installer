@@ -13,4 +13,5 @@
 	<Cell Type="int" Row = "4" Column = "7" Value = "5" />
 	<Cell Type="int" Row = "4" Column = "8" Value = "6" />
 	<Cell Type="string" Row = "5" Column = "6" Value = "Mres" />
+	<Run Function="DeleteInstallerSheet" />
 </WorkSheet>
