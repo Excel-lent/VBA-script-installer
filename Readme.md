@@ -43,6 +43,7 @@ An example of "Sheet1.xml":
 	<Shape Type="Button" Left = "250" Top = "150" Width = "80" Height = "35" Text="Multiply!" Macro = "MatrixMultiplication.MatrixMultiplication" />
 	<Cell Type="string" Row = "1" Column = "6" Value = "M1" />
 	<Cell Type="int" Row = "1" Column = "7" Value = "1" />
+    <Run Function="DeleteInstallerSheet" />
 </WorkSheet>
 ```
 
