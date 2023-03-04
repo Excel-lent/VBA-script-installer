@@ -6,8 +6,8 @@ Const backupDirectory As String = "\Demo 1 files\"
 
 Sub Install()
     Dim vbResult As VbMsgBoxResult, result As Boolean, listOfSheets$, queriesSheet As IXMLDOMElement
-    Dim mainXml As New MSXML2.DOMDocument60, nd, nd2, newWorkSheet As MSXML2.DOMDocument60, ws As Worksheet
-    Dim shp As Button, importedFiles$(), listOfFiles$, i&
+    Dim mainXml As New MSXML2.DOMDocument60, nd As IXMLDOMElement, nd2 As IXMLDOMElement, newWorkSheet As MSXML2.DOMDocument60
+    Dim ws As Worksheet, shp As Button, importedFiles$(), listOfFiles$, i&
     
     vbResult = MsgBox("Would you like to install sheets and modules?", vbYesNo, "Installer")
     
@@ -74,7 +74,9 @@ Sub Install()
         For Each nd2 In queriesSheet.ChildNodes
             Select Case LCase(nd2.BaseName)
                 Case "cell"     ' Create cells and elements
-                    ws.Cells(CInt(nd2.getAttribute("Row")), CInt(nd2.getAttribute("Column"))) = nd2.getAttribute("Value")
+                    Call SetCell(ws, nd2)
+                Case "range"    ' Range
+                    Call SetRange(ws, nd2)
                 Case "shape"    ' Create buttons
                     Set shp = ws.Buttons.Add(CDbl(nd2.getAttribute("Left")), CDbl(nd2.getAttribute("Top")), CDbl(nd2.getAttribute("Width")), CDbl(nd2.getAttribute("Height")))
                     With shp
@@ -86,6 +88,52 @@ Sub Install()
             End Select
         Next nd2
     Next nd
+End Sub
+
+Sub SetCell(ws As Worksheet, nd As IXMLDOMElement)
+    ws.Cells(CInt(nd.getAttribute("Row")), CInt(nd.getAttribute("Column"))) = nd.getAttribute("Value")
+    'Call SetRange(ws, nd)   ' do formatting
+End Sub
+Sub SetRange(ws As Worksheet, nd As IXMLDOMElement)
+    Dim nd2 As IXMLDOMElement
+    
+    If Not IsNull(nd.getAttribute("Value")) Then
+        ws.Range(nd.getAttribute("Range")) = nd.getAttribute("Value")
+    End If
+    
+'    For Each nd2 In nd.ChildNodes
+'        If Not IsNull(nd.getAttribute("xlEdgeLeft")) Then
+'            ws.Range().Borders(xlEdgeLeft).LineStyle = xlContinuous
+'            With Selection.Borders(xlEdgeLeft)
+'                .LineStyle = xlContinuous
+'                .ColorIndex = 0
+'                .TintAndShade = 0
+'                .Weight = xlMedium
+'            End With
+'        End If
+'        Select Case LCase(nd2.BaseName)
+'            Case "cell"     ' Create cells and elements
+'                Call SetCell(ws, nd2)
+'            Case "range"    ' Range
+'                Call SetRange(ws, nd2)
+'            Case "shape"    ' Create buttons
+'                Set shp = ws.Buttons.Add(CDbl(nd2.getAttribute("Left")), CDbl(nd2.getAttribute("Top")), CDbl(nd2.getAttribute("Width")), CDbl(nd2.getAttribute("Height")))
+'                With shp
+'                  .OnAction = nd2.getAttribute("Macro")
+'                  .Caption = nd2.getAttribute("Text")
+'                End With
+'            Case "run"
+'                Run (nd2.getAttribute("Function"))
+'        End Select
+'        With ws.Borders
+'        Wend
+'    Next nd2
+'    If nd.getAttribute("Row") = 1 Then
+'    End If
+'    <xlEdgeLeft LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+'        <xlEdgeTop LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+'        <xlEdgeBottom LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+'        <xlEdgeRight LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
 End Sub
 
 Sub DeleteInstallerSheet()

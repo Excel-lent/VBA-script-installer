@@ -2,16 +2,27 @@
 <WorkSheet Name="Matrix Multiplication">
 	<Shape Type="Button" Left = "250" Top = "150" Width = "80" Height = "35" Text="Multiply!" Macro = "MatrixMultiplication.MatrixMultiplication" />
 	<Cell Type="string" Row = "1" Column = "5" Value = "Multiplication of matrices:" />
-	<Cell Type="string" Row = "1" Column = "6" Value = "M1" />
-	<Cell Type="int" Row = "1" Column = "7" Value = "1" />
-	<Cell Type="int" Row = "1" Column = "8" Value = "2" />
-	<Cell Type="int" Row = "2" Column = "7" Value = "3" />
-	<Cell Type="int" Row = "2" Column = "8" Value = "4" />
-	<Cell Type="string" Row = "3" Column = "6" Value = "M2" />
-	<Cell Type="int" Row = "3" Column = "7" Value = "3" />
-	<Cell Type="int" Row = "3" Column = "8" Value = "4" />
-	<Cell Type="int" Row = "4" Column = "7" Value = "5" />
-	<Cell Type="int" Row = "4" Column = "8" Value = "6" />
-	<Cell Type="string" Row = "5" Column = "6" Value = "Mres" />
+	<Range Type="string" Range = "F1" Value = "M1" />
+	<Range Type="int" Range = "G1" Value = "1" />
+	<Range Type="int" Range = "H1" Value = "2" />
+	<Range Type="int" Range = "G2" Value = "3" />
+	<Range Type="int" Range = "H2" Value = "4" />
+	<Range Type="string" Range = "F3" Value = "M2" />
+	<Range Type="int" Range = "G3" Value = "3" />
+	<Range Type="int" Range = "H3" Value = "4" />
+	<Range Type="int" Range = "G4" Value = "5" />
+	<Range Type="int" Range = "H4" Value = "6" />
+	<Range Type="string" Range = "F5" Value = "Mres" />
+	<Range Type="string" Range = "F7" Value = "Manually" />
+	<Range Type="formula" Range = "G7" Value = "=G1*G3+H1*G4" />
+	<Range Type="formula" Range = "H7" Value = "=G1*H3+H1*H4" />
+	<Range Type="formula" Range = "G8" Value = "=G2*G3+H2*G4" />
+	<Range Type="formula" Range = "H8" Value = "=G2*H3+H2*H4" />
+	<Range Range="F1:F8">
+		<xlEdgeLeft LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+		<xlEdgeTop LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+		<xlEdgeBottom LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+		<xlEdgeRight LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+	</Range>
 	<Run Function="DeleteInstallerSheet" />
 </WorkSheet>
