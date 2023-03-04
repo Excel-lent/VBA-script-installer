@@ -76,7 +76,7 @@ Sub Install()
                 Case "cell"     ' Create cells and elements
                     Call SetCell(ws, nd2)
                 Case "range"    ' Range
-                    Call SetRange(ws, nd2)
+                    Call SetRange(ws, nd2, ws.Range(nd2.getAttribute("Range")))
                 Case "shape"    ' Create buttons
                     Set shp = ws.Buttons.Add(CDbl(nd2.getAttribute("Left")), CDbl(nd2.getAttribute("Top")), CDbl(nd2.getAttribute("Width")), CDbl(nd2.getAttribute("Height")))
                     With shp
@@ -91,32 +91,48 @@ Sub Install()
 End Sub
 
 Sub SetCell(ws As Worksheet, nd As IXMLDOMElement)
-    ws.Cells(CInt(nd.getAttribute("Row")), CInt(nd.getAttribute("Column"))) = nd.getAttribute("Value")
-    'Call SetRange(ws, nd)   ' do formatting
-End Sub
-Sub SetRange(ws As Worksheet, nd As IXMLDOMElement)
-    Dim nd2 As IXMLDOMElement, wsRange As Range
+    Dim wsRange As Range
     
-    Set wsRange = ws.Range(nd.getAttribute("Range"))
+    Set wsRange = ws.Range(ws.Cells(CInt(nd.getAttribute("Row")), CInt(nd.getAttribute("Column"))).address)
+    Call SetRange(ws, nd, wsRange)
+End Sub
+Sub SetRange(ws As Worksheet, nd As IXMLDOMElement, wsRange As Range)
+    Dim nd2 As IXMLDOMElement
+    
     If Not IsNull(nd.getAttribute("Value")) Then
         wsRange = nd.getAttribute("Value")
     End If
     
+    If Not IsNull(nd.getAttribute("HorizontalAlignment")) Then
+        wsRange.HorizontalAlignment = String2HorizontalAlignment(nd.getAttribute("HorizontalAlignment"))
+    End If
+    
     For Each nd2 In nd.ChildNodes
-        With wsRange.Borders(String2BordersIndex(nd2.BaseName))
-            If Not IsNull(nd2.getAttribute("LineStyle")) Then
-                .LineStyle = String2LineStyle(nd2.getAttribute("LineStyle"))
-            End If
-            If Not IsNull(nd2.getAttribute("ColorIndex")) Then
-                .ColorIndex = CLng(nd2.getAttribute("ColorIndex"))
-            End If
-            If Not IsNull(nd2.getAttribute("TintAndShade")) Then
-                .TintAndShade = CLng(nd2.getAttribute("TintAndShade"))
-            End If
-            If Not IsNull(nd2.getAttribute("Weight")) Then
-                .Weight = String2BorderWeight(nd2.getAttribute("Weight"))
-            End If
-        End With
+        If LCase(nd2.BaseName) = "font" Then
+            With wsRange.Font
+                If Not IsNull(nd2.getAttribute("Color")) Then
+                    .Color = CLng(nd2.getAttribute("Color"))
+                End If
+                If Not IsNull(nd2.getAttribute("Bold")) Then
+                    .Bold = String2Boolean(nd2.getAttribute("Bold"))
+                End If
+            End With
+        Else
+            With wsRange.Borders(String2BordersIndex(nd2.BaseName))
+                If Not IsNull(nd2.getAttribute("LineStyle")) Then
+                    .LineStyle = String2LineStyle(nd2.getAttribute("LineStyle"))
+                End If
+                If Not IsNull(nd2.getAttribute("ColorIndex")) Then
+                    .ColorIndex = CLng(nd2.getAttribute("ColorIndex"))
+                End If
+                If Not IsNull(nd2.getAttribute("TintAndShade")) Then
+                    .TintAndShade = CLng(nd2.getAttribute("TintAndShade"))
+                End If
+                If Not IsNull(nd2.getAttribute("Weight")) Then
+                    .Weight = String2BorderWeight(nd2.getAttribute("Weight"))
+                End If
+            End With
+        End If
     Next nd2
 End Sub
 
@@ -247,5 +263,23 @@ Function String2BorderWeight(inputString$) As XlBorderWeight
             String2BorderWeight = xlThick
         Case LCase("xlThin")
             String2BorderWeight = xlThin
+    End Select
+End Function
+Function String2HorizontalAlignment(inputString$) As Long
+    Select Case LCase(inputString)
+        Case LCase("xlLeft")
+            String2HorizontalAlignment = xlLeft
+        Case LCase("xlRight")
+            String2HorizontalAlignment = xlRight
+        Case LCase("xlCenter")
+            String2HorizontalAlignment = xlCenter
+    End Select
+End Function
+Function String2Boolean(inputString$) As Boolean
+    Select Case LCase(inputString)
+        Case LCase("true")
+            String2Boolean = True
+        Case LCase("false")
+            String2Boolean = False
     End Select
 End Function
