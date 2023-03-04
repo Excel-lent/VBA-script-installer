@@ -21,16 +21,13 @@ An example of "main.xml" that contains one sheet ("Sheet1.xml"):
 ```
 
 Each sheet' XML file contains following XML nodes:
-* Cell
+* Cell / Range
     * Type (not used yet)
-    * Row
-    * Column
-    * Value (cell can also contain formula)
-* Range
-    * Type (not used yet)
-    * Range (string, see an example below)
-    * Value (range can also contain formula)
+    * Range (string in case of range, see an example below) or Row / Column (longs in case of cell)
+    * Value (cell / range can also contain formula)
     * Border lines (see functions "String2BordersIndex", "String2LineStyle", "String2BorderWeight" and example below)
+    * Font color (as long) and bold (true / false)
+    * HorizontalAlignment (see functions "String2HorizontalAlignment" and example below)
 * Shape
     * Type (only "Button" can be used)
     * Left
@@ -46,7 +43,9 @@ An example of "Sheet1.xml":
 ```xml
 <WorkSheet Name="Matrix Multiplication">
     <Shape Type="Button" Left = "250" Top = "150" Width = "80" Height = "35" Text="Multiply!" Macro = "MatrixMultiplication.MatrixMultiplication" />
-    <Cell Type="string" Row = "1" Column = "6" Value = "M1" />
+    <Cell Type="string" Row = "1" Column = "5" HorizontalAlignment = "xlRight" Value = "Multiplication of matrices:">
+        <Font Color = "-16776961" Bold = "True" />
+    </Cell>
     <Range Type="int" Range = "G1" Value = "1" />
     <Range Type="formula" Range = "G7" Value = "=G1*G3+H1*G4" />
     <Run Function="DeleteInstallerSheet" />
@@ -63,7 +62,7 @@ An example of "Sheet1.xml":
 * "Demo 1.xlsm" installs sources and one sheet with implementation of matrix multiplication.
 
 ## TODO:
-* Add handling of cell formatting
+* Enhance handling of cell formatting
 * Add handling of user forms
 
 Any contributions (proposals, discussions, pull requests) are welcome. 

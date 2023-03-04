@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WorkSheet Name="Matrix Multiplication">
 	<Shape Type="Button" Left = "250" Top = "150" Width = "80" Height = "35" Text="Multiply!" Macro = "MatrixMultiplication.MatrixMultiplication" />
-	<Cell Type="string" Row = "1" Column = "5" Value = "Multiplication of matrices:" />
+	<Cell Type="string" Row = "1" Column = "5" HorizontalAlignment = "xlRight" Value = "Multiplication of matrices:">
+		<Font Color = "-16776961" Bold = "True" />
+	</Cell>
 	<Range Type="string" Range = "F1" Value = "M1" />
 	<Range Type="int" Range = "G1" Value = "1" />
 	<Range Type="int" Range = "H1" Value = "2" />
@@ -12,7 +14,8 @@
 	<Range Type="int" Range = "H3" Value = "4" />
 	<Range Type="int" Range = "G4" Value = "5" />
 	<Range Type="int" Range = "H4" Value = "6" />
-	<Range Type="string" Range = "F5" Value = "Mres" />
+	<Range Type="string" Range = "F5" Value = "Press" />
+	<Range Type="string" Range = "F6" Value = "Multiply" />
 	<Range Type="string" Range = "F7" Value = "Manually" />
 	<Range Type="formula" Range = "G7" Value = "=G1*G3+H1*G4" />
 	<Range Type="formula" Range = "H7" Value = "=G1*H3+H1*H4" />
