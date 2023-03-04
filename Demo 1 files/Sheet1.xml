@@ -24,5 +24,29 @@
 		<xlEdgeBottom LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
 		<xlEdgeRight LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
 	</Range>
+	<Range Range="F1:H2">
+		<xlEdgeLeft LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+		<xlEdgeTop LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+		<xlEdgeBottom LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+		<xlEdgeRight LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+	</Range>
+	<Range Range="F3:H4">
+		<xlEdgeLeft LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+		<xlEdgeTop LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+		<xlEdgeBottom LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+		<xlEdgeRight LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+	</Range>
+	<Range Range="F5:H6">
+		<xlEdgeLeft LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+		<xlEdgeTop LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+		<xlEdgeBottom LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+		<xlEdgeRight LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+	</Range>
+	<Range Range="F7:H8">
+		<xlEdgeLeft LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+		<xlEdgeTop LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+		<xlEdgeBottom LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+		<xlEdgeRight LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+	</Range>
 	<Run Function="DeleteInstallerSheet" />
 </WorkSheet>
