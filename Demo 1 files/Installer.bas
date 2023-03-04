@@ -95,45 +95,29 @@ Sub SetCell(ws As Worksheet, nd As IXMLDOMElement)
     'Call SetRange(ws, nd)   ' do formatting
 End Sub
 Sub SetRange(ws As Worksheet, nd As IXMLDOMElement)
-    Dim nd2 As IXMLDOMElement
+    Dim nd2 As IXMLDOMElement, wsRange As Range
     
+    Set wsRange = ws.Range(nd.getAttribute("Range"))
     If Not IsNull(nd.getAttribute("Value")) Then
-        ws.Range(nd.getAttribute("Range")) = nd.getAttribute("Value")
+        wsRange = nd.getAttribute("Value")
     End If
     
-'    For Each nd2 In nd.ChildNodes
-'        If Not IsNull(nd.getAttribute("xlEdgeLeft")) Then
-'            ws.Range().Borders(xlEdgeLeft).LineStyle = xlContinuous
-'            With Selection.Borders(xlEdgeLeft)
-'                .LineStyle = xlContinuous
-'                .ColorIndex = 0
-'                .TintAndShade = 0
-'                .Weight = xlMedium
-'            End With
-'        End If
-'        Select Case LCase(nd2.BaseName)
-'            Case "cell"     ' Create cells and elements
-'                Call SetCell(ws, nd2)
-'            Case "range"    ' Range
-'                Call SetRange(ws, nd2)
-'            Case "shape"    ' Create buttons
-'                Set shp = ws.Buttons.Add(CDbl(nd2.getAttribute("Left")), CDbl(nd2.getAttribute("Top")), CDbl(nd2.getAttribute("Width")), CDbl(nd2.getAttribute("Height")))
-'                With shp
-'                  .OnAction = nd2.getAttribute("Macro")
-'                  .Caption = nd2.getAttribute("Text")
-'                End With
-'            Case "run"
-'                Run (nd2.getAttribute("Function"))
-'        End Select
-'        With ws.Borders
-'        Wend
-'    Next nd2
-'    If nd.getAttribute("Row") = 1 Then
-'    End If
-'    <xlEdgeLeft LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
-'        <xlEdgeTop LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
-'        <xlEdgeBottom LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
-'        <xlEdgeRight LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+    For Each nd2 In nd.ChildNodes
+        With wsRange.Borders(String2BordersIndex(nd2.BaseName))
+            If Not IsNull(nd2.getAttribute("LineStyle")) Then
+                .LineStyle = String2LineStyle(nd2.getAttribute("LineStyle"))
+            End If
+            If Not IsNull(nd2.getAttribute("ColorIndex")) Then
+                .ColorIndex = CLng(nd2.getAttribute("ColorIndex"))
+            End If
+            If Not IsNull(nd2.getAttribute("TintAndShade")) Then
+                .TintAndShade = CLng(nd2.getAttribute("TintAndShade"))
+            End If
+            If Not IsNull(nd2.getAttribute("Weight")) Then
+                .Weight = String2BorderWeight(nd2.getAttribute("Weight"))
+            End If
+        End With
+    Next nd2
 End Sub
 
 Sub DeleteInstallerSheet()
@@ -210,4 +194,58 @@ Function ImportModules() As String()
     
     ImportModules = importedFiles
     Set cmpComponents = Nothing
+End Function
+
+' Conversions of strings to Excel types:
+Function String2BordersIndex(inputString$) As XlBordersIndex
+    Select Case LCase(inputString)
+        Case LCase("xlEdgeLeft")
+            String2BordersIndex = xlEdgeLeft
+        Case LCase("xlEdgeTop")
+            String2BordersIndex = xlEdgeTop
+        Case LCase("xlEdgeBottom")
+            String2BordersIndex = xlEdgeBottom
+        Case LCase("xlEdgeRight")
+            String2BordersIndex = xlEdgeRight
+        Case LCase("xlDiagonalUp")
+            String2BordersIndex = xlDiagonalUp
+        Case LCase("xlDiagonalDown")
+            String2BordersIndex = xlDiagonalDown
+        Case LCase("xlInsideHorizontal")
+            String2BordersIndex = xlInsideHorizontal
+        Case LCase("xlInsideVertical")
+            String2BordersIndex = xlInsideVertical
+    End Select
+End Function
+Function String2LineStyle(inputString$) As XlLineStyle
+    Select Case LCase(inputString)
+        Case LCase("xlContinuous")
+            String2LineStyle = xlContinuous
+        Case LCase("xlDash")
+            String2LineStyle = xlDash
+        Case LCase("xlDashDot")
+            String2LineStyle = xlDashDot
+        Case LCase("xlDashDotDot")
+            String2LineStyle = xlDashDotDot
+        Case LCase("xlDot")
+            String2LineStyle = xlDot
+        Case LCase("xlDouble")
+            String2LineStyle = xlDouble
+        Case LCase("xlLineStyleNone")
+            String2LineStyle = xlLineStyleNone
+        Case LCase("xlSlantDashDot")
+            String2LineStyle = xlSlantDashDot
+    End Select
+End Function
+Function String2BorderWeight(inputString$) As XlBorderWeight
+    Select Case LCase(inputString)
+        Case LCase("xlHairline")
+            String2BorderWeight = xlHairline
+        Case LCase("xlMedium")
+            String2BorderWeight = xlMedium
+        Case LCase("xlThick")
+            String2BorderWeight = xlThick
+        Case LCase("xlThin")
+            String2BorderWeight = xlThin
+    End Select
 End Function

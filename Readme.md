@@ -30,6 +30,7 @@ Each sheet' XML file contains following XML nodes:
     * Type (not used yet)
     * Range (string, see an example below)
     * Value (range can also contain formula)
+    * Border lines (see functions "String2BordersIndex", "String2LineStyle", "String2BorderWeight" and example below)
 * Shape
     * Type (only "Button" can be used)
     * Left
@@ -49,6 +50,12 @@ An example of "Sheet1.xml":
     <Range Type="int" Range = "G1" Value = "1" />
     <Range Type="formula" Range = "G7" Value = "=G1*G3+H1*G4" />
     <Run Function="DeleteInstallerSheet" />
+    <Range Range="F1:F8">
+        <xlEdgeLeft LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+        <xlEdgeTop LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+        <xlEdgeBottom LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+        <xlEdgeRight LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
+    </Range>
 </WorkSheet>
 ```
 
