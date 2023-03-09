@@ -51,5 +51,7 @@
 		<xlEdgeBottom LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
 		<xlEdgeRight LineStyle = "xlContinuous" ColorIndex = "0" TintAndShade = "0" Weight = "xlMedium" />
 	</Range>
-	<Run Function="DeleteInstallerSheet" />
+	<If Message = "Do you want to remove &quot;Installer&quot; sheet?" Caption = "Installer">
+		<True Function="DeleteInstallerSheet" />
+	</If>
 </WorkSheet>

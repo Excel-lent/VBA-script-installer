@@ -81,15 +81,41 @@ Sub Install()
                     Set shp = ws.Buttons.Add(CDbl(nd2.getAttribute("Left")), CDbl(nd2.getAttribute("Top")), CDbl(nd2.getAttribute("Width")), CDbl(nd2.getAttribute("Height")))
                     With shp
                       .OnAction = nd2.getAttribute("Macro")
-                      .Caption = nd2.getAttribute("Text")
+                      .caption = nd2.getAttribute("Text")
                     End With
                 Case "run"
-                    Run (nd2.getAttribute("Function"))
+                    Call Run(nd2.getAttribute("Function"))
+                Case "if"
+                    Call Condition(nd2)
             End Select
         Next nd2
     Next nd
 End Sub
 
+Sub Condition(nd As IXMLDOMElement)
+    Dim nd2 As IXMLDOMElement, messageTxt$, captionTxt$, vbResult As VbMsgBoxResult
+    
+    If Not IsNull(nd.getAttribute("Message")) Then
+        messageTxt = nd.getAttribute("Message")
+    Else
+        messageTxt = ""
+    End If
+    If Not IsNull(nd.getAttribute("Message")) Then
+        captionTxt = nd.getAttribute("Caption")
+    Else
+        captionTxt = ""
+    End If
+    
+    vbResult = MsgBox(messageTxt, vbYesNo, captionTxt)
+    For Each nd2 In nd.ChildNodes
+        If nd2.nodeName = "True" And vbResult = vbYes Then
+            Run (nd2.getAttribute("Function"))
+        End If
+        If nd2.nodeName = "False" And vbResult = vbNo Then
+            Call Run(nd2.getAttribute("Function"))
+        End If
+    Next nd2
+End Sub
 Sub SetCell(ws As Worksheet, nd As IXMLDOMElement)
     Dim wsRange As Range
     
@@ -137,14 +163,9 @@ Sub SetRange(ws As Worksheet, nd As IXMLDOMElement, wsRange As Range)
 End Sub
 
 Sub DeleteInstallerSheet()
-    Dim vbResult As VbMsgBoxResult
-    
-    vbResult = MsgBox("Do you want to remove ""Installer"" sheet?", vbYesNo, "Installer")
-    If vbResult = vbYes Then
-        Application.DisplayAlerts = False
-        ThisWorkbook.Sheets("Installer").Delete
-        Application.DisplayAlerts = True
-    End If
+    Application.DisplayAlerts = False
+    ThisWorkbook.Sheets("Installer").Delete
+    Application.DisplayAlerts = True
 End Sub
 
 Private Function VBATrusted() As Boolean
