@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WorkSheet Name="Installer">
+	<Shape Type="Button" Left = "464" Top = "174" Width = "156" Height = "111" Text="Export sources" Macro = "ExportSources" />
+</WorkSheet>

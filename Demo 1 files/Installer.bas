@@ -2,14 +2,15 @@ Attribute VB_Name = "Installer"
 Option Explicit
 
 Const MainXmlFile As String = "main.xml"
-Const backupDirectory As String = "\Demo 1 files\"
+Const BackupDirectory As String = "\Demo 1 files\"
+Const InstallerName As String = "Installer"
 
 Sub Install()
     Dim vbResult As VbMsgBoxResult, result As Boolean, listOfSheets$, queriesSheet As IXMLDOMElement
     Dim mainXml As New MSXML2.DOMDocument60, nd As IXMLDOMElement, nd2 As IXMLDOMElement, newWorkSheet As MSXML2.DOMDocument60
     Dim ws As Worksheet, shp As Button, importedFiles$(), listOfFiles$, i&
     
-    vbResult = MsgBox("Would you like to install sheets and modules?", vbYesNo, "Installer")
+    vbResult = MsgBox("Would you like to install sheets and modules?", vbYesNo, InstallerName)
     
     If vbResult = vbNo Then
         Exit Sub
@@ -21,15 +22,15 @@ Sub Install()
                           "(File > Options > Trust Center > Trust Center Settings > Macro Settings > Trust Access...)" & vbCrLf & _
                           "and run the script again." & vbCrLf & _
                           "2: Install sheets and afterwards add modules manually." & vbCrLf & _
-                          "Would you like to proceed with option 2?", vbYesNo, "Installer")
+                          "Would you like to proceed with option 2?", vbYesNo, InstallerName)
         If vbResult = vbNo Then
             Exit Sub
         End If
     End If
     
-    result = mainXml.Load(ThisWorkbook.Path & backupDirectory & MainXmlFile)
+    result = mainXml.Load(ThisWorkbook.path & BackupDirectory & MainXmlFile)
     If Not result Then
-        Call MsgBox("Error at loading of " & ThisWorkbook.Path & backupDirectory & MainXmlFile, vbOKOnly, "Installer")
+        Call MsgBox("Error at loading of " & ThisWorkbook.path & BackupDirectory & MainXmlFile, vbOKOnly, InstallerName)
         Exit Sub
     End If
     
@@ -46,9 +47,9 @@ Sub Install()
     listOfSheets = ""
     For Each nd In mainXml.DocumentElement.SelectNodes("/WorkBook/WorkSheets/WorkSheet")
         Set newWorkSheet = New MSXML2.DOMDocument60
-        result = newWorkSheet.Load(ThisWorkbook.Path & backupDirectory & nd.getAttribute("Path"))
+        result = newWorkSheet.Load(ThisWorkbook.path & BackupDirectory & nd.getAttribute("Path"))
         If Not result Then
-            Call MsgBox("Error at loading of " & ThisWorkbook.Path & backupDirectory & nd.getAttribute("Path"), vbOKOnly, "Installer")
+            Call MsgBox("Error at loading of " & ThisWorkbook.path & BackupDirectory & nd.getAttribute("Path"), vbOKOnly, InstallerName)
             Exit Sub
         End If
         Set queriesSheet = newWorkSheet.DocumentElement.SelectNodes("/WorkSheet").Item(0)
@@ -59,17 +60,21 @@ Sub Install()
     
     For Each nd In mainXml.DocumentElement.SelectNodes("/WorkBook/WorkSheets/WorkSheet")
         Set newWorkSheet = New MSXML2.DOMDocument60
-        result = newWorkSheet.Load(ThisWorkbook.Path & backupDirectory & nd.getAttribute("Path"))
+        result = newWorkSheet.Load(ThisWorkbook.path & BackupDirectory & nd.getAttribute("Path"))
         If Not result Then
-            Call MsgBox("Error at loading of " & ThisWorkbook.Path & backupDirectory & nd.getAttribute("Path"), vbOKOnly, "Installer")
+            Call MsgBox("Error at loading of " & ThisWorkbook.path & BackupDirectory & nd.getAttribute("Path"), vbOKOnly, InstallerName)
             Exit Sub
         End If
         Set queriesSheet = newWorkSheet.DocumentElement.SelectNodes("/WorkSheet").Item(0)
         
-        With ThisWorkbook
-            Set ws = .Sheets.Add(After:=.Sheets(.Sheets.Count))
-            ws.Name = queriesSheet.getAttribute("Name")
-        End With
+        If Not SheetExists(queriesSheet.getAttribute("Name")) Then
+            With ThisWorkbook
+                Set ws = .Sheets.Add(After:=.Sheets(.Sheets.Count))
+                ws.Name = queriesSheet.getAttribute("Name")
+            End With
+        Else
+            Set ws = ThisWorkbook.Worksheets(queriesSheet.getAttribute("Name"))
+        End If
         
         For Each nd2 In queriesSheet.ChildNodes
             Select Case LCase(nd2.BaseName)
@@ -91,7 +96,17 @@ Sub Install()
         Next nd2
     Next nd
 End Sub
-
+Function SheetExists(sheetToFind As String) As Boolean
+    Dim ws As Worksheet
+    
+    SheetExists = False
+    For Each ws In ThisWorkbook.Worksheets
+        If sheetToFind = ws.Name Then
+            SheetExists = True
+            Exit Function
+        End If
+    Next ws
+End Function
 Sub Condition(nd As IXMLDOMElement)
     Dim nd2 As IXMLDOMElement, messageTxt$, captionTxt$, vbResult As VbMsgBoxResult
     
@@ -164,7 +179,7 @@ End Sub
 
 Sub DeleteInstallerSheet()
     Application.DisplayAlerts = False
-    ThisWorkbook.Sheets("Installer").Delete
+    ThisWorkbook.Sheets(InstallerName).Delete
     Application.DisplayAlerts = True
 End Sub
 
@@ -176,7 +191,7 @@ End Function
 Sub ExportSources()
     Dim i&, exportedFiles$(), listOfFiles$
     
-    exportedFiles = ExportModules(backupDirectory, "Installer", True)
+    exportedFiles = ExportModules(BackupDirectory, InstallerName, True)
     listOfFiles = ""
     For i = 1 To UBound(exportedFiles)
         listOfFiles = listOfFiles & exportedFiles(i) & vbCrLf
@@ -184,20 +199,24 @@ Sub ExportSources()
     Call MsgBox("Following files were exported:" & vbCrLf & listOfFiles)
 End Sub
 
-Private Function ExportModules(backupDirectory$, installerName$, backupInstaller As Boolean) As String()
+Private Function ExportModules(BackupDirectory$, InstallerName$, backupInstaller As Boolean) As String()
     Dim VBComp, VBMod, exportedFiles$()
     
     ReDim exportedFiles(0)
     For Each VBComp In ThisWorkbook.VBProject.VBComponents
         Set VBMod = VBComp.CodeModule
-        If Not (VBComp.Name = installerName And Not backupInstaller) Then
+        If Not (VBComp.Name = InstallerName And Not backupInstaller) Then
             Select Case VBComp.Type
                 Case 1  ' vbext_ct_StdModule
-                    VBComp.Export ThisWorkbook.Path & backupDirectory & VBComp.Name & ".bas"
+                    VBComp.Export ThisWorkbook.path & BackupDirectory & VBComp.Name & ".bas"
                     ReDim Preserve exportedFiles(UBound(exportedFiles) + 1)
                     exportedFiles(UBound(exportedFiles)) = VBComp.Name & ".bas"
                 Case 2  ' vbext_ct_ClassModule
-                    VBComp.Export ThisWorkbook.Path & backupDirectory & VBComp.Name & ".cls"
+                    VBComp.Export ThisWorkbook.path & BackupDirectory & VBComp.Name & ".cls"
+                    ReDim Preserve exportedFiles(UBound(exportedFiles) + 1)
+                    exportedFiles(UBound(exportedFiles)) = VBComp.Name & ".cls"
+                Case 3  ' vbext_ct_UserForm
+                    VBComp.Export ThisWorkbook.path & BackupDirectory & VBComp.Name & ".frm"
                     ReDim Preserve exportedFiles(UBound(exportedFiles) + 1)
                     exportedFiles(UBound(exportedFiles)) = VBComp.Name & ".cls"
             End Select
@@ -212,17 +231,17 @@ Function ImportModules() As String()
     Dim cmpComponents, file$, importedFiles$()
     
     ' Get the path to the folder with modules
-    If Dir(ThisWorkbook.Path & backupDirectory) = "" Then
+    If Dir(ThisWorkbook.path & BackupDirectory) = "" Then
         MsgBox "Import Folder not exist"
         Exit Function
     End If
     Set cmpComponents = ThisWorkbook.VBProject.VBComponents
     
     ReDim importedFiles(0)
-    file = Dir(ThisWorkbook.Path & backupDirectory)
+    file = Dir(ThisWorkbook.path & BackupDirectory)
     While (file <> "")
-        If (InStr(file, ".cls") > 0 Or InStr(file, ".bas") > 0) And file <> "Installer.bas" Then
-            cmpComponents.Import ThisWorkbook.Path & backupDirectory & file
+        If (InStr(file, ".cls") > 0 Or InStr(file, ".bas") Or InStr(file, ".frm") > 0) And file <> "Installer.bas" Then
+            cmpComponents.Import ThisWorkbook.path & BackupDirectory & file
             ReDim Preserve importedFiles(UBound(importedFiles) + 1)
             importedFiles(UBound(importedFiles)) = file
         End If
@@ -304,3 +323,25 @@ Function String2Boolean(inputString$) As Boolean
             String2Boolean = False
     End Select
 End Function
+' Automatically gets size and position of shapes on the sheet to avoid experimental tries to find the best position and size
+Sub ShapeHelper()
+    Dim ws As Worksheet, shp As Shape, i&
+    
+    Set ws = ThisWorkbook.Worksheets(InstallerName)
+    
+    i = 1
+    For Each shp In ws.Shapes
+        ws.Cells(i, 1) = "Top:"
+        ws.Cells(i, 2) = shp.Top
+        i = i + 1
+        ws.Cells(i, 1) = "Left:"
+        ws.Cells(i, 2) = shp.Left
+        i = i + 1
+        ws.Cells(i, 1) = "Width"
+        ws.Cells(i, 2) = shp.Width
+        i = i + 1
+        ws.Cells(i, 1) = "Height"
+        ws.Cells(i, 2) = shp.Height
+        i = i + 1
+    Next shp
+End Sub
