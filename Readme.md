@@ -63,6 +63,5 @@ An example of "Sheet1.xml":
 
 ## TODO:
 * Enhance handling of cell formatting
-* Add handling of user forms
 
 Any contributions (proposals, discussions, pull requests) are welcome. 

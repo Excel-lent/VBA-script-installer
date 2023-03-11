@@ -2,6 +2,8 @@
 <WorkBook>
 	<WorkSheets>
 		<WorkSheet Path="Installer.xml" />
-		<WorkSheet Path="Sheet1.xml" />
+		<If Message = "Do you want to add &quot;Matrix Multiplication&quot; sheet?" Caption = "Installer">
+			<True Path="Sheet1.xml" />
+		</If>
 	</WorkSheets>
 </WorkBook>
