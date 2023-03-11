@@ -92,6 +92,11 @@ Sub Install()
             Set ws = ThisWorkbook.Worksheets(queriesSheet.getAttribute("Name"))
         End If
         
+        If Not IsNull(queriesSheet.getAttribute("Zoom")) Then
+            ws.Activate
+            ActiveWindow.Zoom = CInt(queriesSheet.getAttribute("Zoom"))
+        End If
+        
         For Each nd2 In queriesSheet.ChildNodes
             Select Case LCase(nd2.BaseName)
                 Case "cell"     ' Create cells and elements
