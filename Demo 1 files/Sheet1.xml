@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WorkSheet Name="Matrix Multiplication">
+<WorkSheet Name="Matrix Multiplication" Zoom = "90">
 	<Shape Type="Button" Left = "250" Top = "150" Width = "80" Height = "35" Text="Multiply!" Macro = "MatrixMultiplication.MatrixMultiplication" />
 	<Cell Type="string" Row = "1" Column = "5" HorizontalAlignment = "xlRight" Value = "Multiplication of matrices:">
 		<Font Color = "-16776961" Bold = "True" />
